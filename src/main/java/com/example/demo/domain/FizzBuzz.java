@@ -13,6 +13,7 @@ public class FizzBuzz {
         }
         if(!value2.equals(""))
             return value2;
+
         return value;
     }
 }
