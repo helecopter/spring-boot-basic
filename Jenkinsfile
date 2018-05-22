@@ -1,6 +1,6 @@
 pipeline {
     agent any
-    
+
     environment {
         NameSpace='geralt'
     }
@@ -23,7 +23,7 @@ pipeline {
         stage('Build') {
             steps {
                 sh './gradlew build'
-                sh 'whoami' 
+                sh 'whoami'
                 withCredentials([sshUserPrivateKey(credentialsId: "training_pem", keyFileVariable: 'keyfile')]) {
                 sh "ssh -i $keyfile ubuntu@172.31.12.139 mkdir -p /home/ubuntu/works/$NameSpace"
                 sh "scp -i $keyfile ./build/libs/demo-0.0.1-SNAPSHOT.jar ubuntu@172.31.12.139:/home/ubuntu/works/$NameSpace/demo.jar"
@@ -35,10 +35,10 @@ pipeline {
         }
         stage('DeployTest'){
             steps {
-                sh 'whoami' 
+                sh 'whoami'
                 withCredentials([sshUserPrivateKey(credentialsId: "training_pem", keyFileVariable: 'keyfile')]) {
                     sh "ssh -i $keyfile ubuntu@172.31.12.139 mkdir -p /home/ubuntu/works/$NameSpace"
-                    sh "ssh -i $keyfile ubuntu@172.31.12.139 'elinks --dump 172.31.12.139:8765/fizz-buzz/3'"
+                    sh "ssh -i $keyfile ubuntu@172.31.12.139 'curl http://172.31.12.139:8765/fizz-buzz/3'"
                 }
             }
         }
